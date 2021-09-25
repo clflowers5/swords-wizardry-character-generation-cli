@@ -1,5 +1,6 @@
 import boxen from "boxen";
 import inquirer from "inquirer";
+import { render as prettyJson } from "prettyjson";
 import { generateWelcomeText } from "./generateFont";
 import { nameByRace } from "fantasy-name-generator";
 import { Race } from "./types";
@@ -13,11 +14,11 @@ async function displayWelcomeMessage(): Promise<void> {
     padding: 1,
   });
   console.log(decoratedWelcomeMessage);
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  await new Promise((resolve) => setTimeout(resolve, 1250));
 }
 
 async function inquirePrompts(): Promise<void> {
-  const response = await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       type: "list",
       name: "race",
@@ -51,7 +52,21 @@ async function inquirePrompts(): Promise<void> {
     },
   ]);
 
-  console.log(JSON.stringify(response, null, 2));
+  const formattedAnswers = formatAnswers(answers);
+  console.log(prettyJson(formattedAnswers));
+}
+
+function capitalizeFirstLetter(word: string | null) {
+  return word ? word.charAt(0).toUpperCase() + word.slice(1) : "";
+}
+
+function formatAnswers(data: Record<string, string>) {
+  return {
+    name: data.name,
+    sex: capitalizeFirstLetter(data.sex),
+    race: capitalizeFirstLetter(data.race),
+    class: capitalizeFirstLetter(data.class),
+  };
 }
 
 function normalizeAnswerOrGenerateRandom(answer: string, items: string[]) {
@@ -70,6 +85,7 @@ function isRandom(answer: string) {
 }
 
 function normalizeRace(race: Race) {
+  // nameByRace generator does not support half-elf as an input (they aren't _real_ people)
   return race === "half-elf" ? "elf" : race;
 }
 
