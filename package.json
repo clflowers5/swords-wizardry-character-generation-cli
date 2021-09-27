@@ -30,6 +30,7 @@
     "figlet": "^1.5.2",
     "inquirer": "^8.1.5",
     "prettyjson": "^1.2.1",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.4",
+    "write-yaml-file": "^4.2.0"
   }
 }

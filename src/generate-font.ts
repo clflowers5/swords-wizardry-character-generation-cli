@@ -1,5 +1,6 @@
 import figlet, { Fonts } from "figlet";
 import chalk from "chalk";
+import boxen from "boxen";
 
 function generateFigText(
   text: string,
@@ -22,4 +23,15 @@ async function generateWelcomeText(): Promise<string> {
   return `${chalk.yellow(titleText)}\n${chalk.green(subtitleText)}`;
 }
 
-export { generateFigText, generateWelcomeText };
+async function displayWelcomeMessage(): Promise<void> {
+  const formattedMessage = await generateWelcomeText();
+  const decoratedWelcomeMessage = boxen(formattedMessage, {
+    textAlignment: "center",
+    borderStyle: "round",
+    padding: 1,
+  });
+  console.log(decoratedWelcomeMessage);
+  await new Promise((resolve) => setTimeout(resolve, 1250));
+}
+
+export { displayWelcomeMessage, generateFigText, generateWelcomeText };

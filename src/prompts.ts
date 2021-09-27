@@ -1,21 +1,9 @@
-import boxen from "boxen";
 import inquirer from "inquirer";
 import { render as prettyJson } from "prettyjson";
-import { generateWelcomeText } from "./generateFont";
 import { nameByRace } from "fantasy-name-generator";
-import { Race } from "./types";
+import { CharacterDetails, Race } from "./types";
 import { CLASSES, RACE, SEX } from "./constants";
-
-async function displayWelcomeMessage(): Promise<void> {
-  const formattedMessage = await generateWelcomeText();
-  const decoratedWelcomeMessage = boxen(formattedMessage, {
-    textAlignment: "center",
-    borderStyle: "round",
-    padding: 1,
-  });
-  console.log(decoratedWelcomeMessage);
-  await new Promise((resolve) => setTimeout(resolve, 1250));
-}
+import { writeToFile } from "./write-to-file";
 
 async function inquirePrompts(): Promise<void> {
   const answers = await inquirer.prompt([
@@ -45,7 +33,7 @@ async function inquirePrompts(): Promise<void> {
       type: "type",
       name: "name",
       message: "Name: (leave blank for random)",
-      filter: (val, answers) => {
+      filter: (val, answers: CharacterDetails) => {
         const { race, sex } = answers;
         return val ? val : nameByRace(normalizeRace(race), { gender: sex });
       },
@@ -54,13 +42,14 @@ async function inquirePrompts(): Promise<void> {
 
   const formattedAnswers = formatAnswers(answers);
   console.log(prettyJson(formattedAnswers));
+  await writeToFile(formattedAnswers);
 }
 
 function capitalizeFirstLetter(word: string | null) {
   return word ? word.charAt(0).toUpperCase() + word.slice(1) : "";
 }
 
-function formatAnswers(data: Record<string, string>) {
+function formatAnswers(data: CharacterDetails) {
   return {
     name: data.name,
     sex: capitalizeFirstLetter(data.sex),
@@ -71,16 +60,16 @@ function formatAnswers(data: Record<string, string>) {
 
 function normalizeAnswerOrGenerateRandom(answer: string, items: string[]) {
   const normalizedAnswer = answer.toLowerCase();
-  return isRandom(normalizedAnswer)
-    ? getRandomElement(items).toLowerCase()
+  return isRandomAnswer(normalizedAnswer)
+    ? getRandomElementFromList(items).toLowerCase()
     : normalizedAnswer;
 }
 
-function getRandomElement<T>(items: T[]) {
+function getRandomElementFromList<T>(items: T[]) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-function isRandom(answer: string) {
+function isRandomAnswer(answer: string) {
   return answer === "random";
 }
 
@@ -89,4 +78,4 @@ function normalizeRace(race: Race) {
   return race === "half-elf" ? "elf" : race;
 }
 
-export { displayWelcomeMessage, inquirePrompts };
+export { inquirePrompts };

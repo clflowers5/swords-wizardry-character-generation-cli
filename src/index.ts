@@ -1,6 +1,7 @@
-import {displayWelcomeMessage, inquirePrompts} from "./prompts";
+import { displayWelcomeMessage } from "./generate-font";
+import { inquirePrompts } from "./prompts";
 
 (async () => {
-  await displayWelcomeMessage()
-  await inquirePrompts()
+  await displayWelcomeMessage();
+  await inquirePrompts();
 })();

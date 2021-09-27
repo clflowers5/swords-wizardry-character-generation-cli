@@ -1,6 +1,6 @@
 # TODO:
 
-* Save to file
+* ~~Save to file~~
 * Character Stats 
   * Recording 
   * Generation
