@@ -7,7 +7,7 @@ async function writeToFile(data: Record<string, unknown>): Promise<void> {
       /\/|\s/g,
       "-"
     );
-  await writeYamlFile(fileName, data);
+  await writeYamlFile(`./characters/${fileName}`, data);
   console.log(`Saved file: ${fileName}`);
 }
 

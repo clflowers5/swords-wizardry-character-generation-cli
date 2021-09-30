@@ -3,9 +3,11 @@ import { render as prettyJson } from "prettyjson";
 import { nameByRace } from "fantasy-name-generator";
 import random from "random";
 
-import { CharacterDetails, CharacterStats, Race } from "./types";
+import { CharacterDetails, Race } from "./types";
 import { CLASSES, RACE, SEX } from "./constants";
 import { writeToFile } from "./write-to-file";
+import CharacterDetailsProcessChain from "./processors/CharacterDetailsProcessChain";
+import StatsProcessor from "./processors/StatsProcessor";
 
 async function inquirePrompts(): Promise<void> {
   const answers = await inquirer.prompt([
@@ -41,23 +43,20 @@ async function inquirePrompts(): Promise<void> {
       },
     },
     {
-      type: "confirm", // todo: cf
+      type: "confirm",
       name: "stats",
       message: "Generate random stats?",
     },
   ]);
 
-  // todo: clean this up. This is gross.
-  if (answers.stats) {
-    answers.stats = generateRandomStats()
-  }
-
-  const formattedAnswers = formatAnswers(answers);
+  const processedAnswers = processAnswers(answers);
+  const formattedAnswers = formatAnswers(processedAnswers);
   console.log(prettyJson(formattedAnswers));
   await writeToFile(formattedAnswers);
 }
 
 /** todo: cf - move things to a utils or similar file */
+// todo: cf - make processors for all of the attributes. Cleany clean.
 
 function capitalizeFirstLetter(word: string | null) {
   return word ? word.charAt(0).toUpperCase() + word.slice(1) : "";
@@ -93,18 +92,18 @@ function normalizeRace(race: Race) {
   return race === "half-elf" ? "elf" : race;
 }
 
-function generateRandomStats(): CharacterStats {
-  function roll3d6(): number {
-    return random.int(1, 6) + random.int(1, 6) + random.int(1, 6);
-  }
+function processAnswers(answers: CharacterDetails): CharacterDetails {
+  return new CharacterDetailsProcessChain()
+    .chain(new StatsProcessor())
+    .process(answers);
+}
 
-  return {
-    charisma: roll3d6(),
-    constitution: roll3d6(),
-    dexterity: roll3d6(),
-    intelligence: roll3d6(),
-    strength: roll3d6(),
-    wisdom: roll3d6(),
+// not using, but leaving around bc it's a cool little generic chain util
+function chain<T>(...methods: ((data: T) => T)[]): (input: T) => T {
+  return (input: T) => {
+    return methods.reduce((carry, current) => {
+      return current(carry);
+    }, input);
   };
 }
 
