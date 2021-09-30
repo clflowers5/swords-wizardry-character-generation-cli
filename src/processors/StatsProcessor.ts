@@ -6,25 +6,25 @@ class StatsProcessor implements CharacterDetailsProcessor {
   process(input: CharacterDetails): CharacterDetails {
     const result = { ...input };
     if (result.stats) {
-      result.stats = this.generateRandomStats();
+      result.stats = StatsProcessor.generateRandomStats();
     }
 
     return result;
   }
 
-  generateRandomStats(): CharacterStats {
-    function roll3d6(): number {
-      return random.int(1, 6) + random.int(1, 6) + random.int(1, 6);
-    }
-
+  private static generateRandomStats(): CharacterStats {
     return {
-      charisma: roll3d6(),
-      constitution: roll3d6(),
-      dexterity: roll3d6(),
-      intelligence: roll3d6(),
-      strength: roll3d6(),
-      wisdom: roll3d6(),
+      charisma: StatsProcessor.roll3d6(),
+      constitution: StatsProcessor.roll3d6(),
+      dexterity: StatsProcessor.roll3d6(),
+      intelligence: StatsProcessor.roll3d6(),
+      strength: StatsProcessor.roll3d6(),
+      wisdom: StatsProcessor.roll3d6(),
     };
+  }
+
+  private static roll3d6(): number {
+    return random.int(1, 6) + random.int(1, 6) + random.int(1, 6);
   }
 }
 
