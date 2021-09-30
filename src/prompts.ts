@@ -1,7 +1,6 @@
 import inquirer from "inquirer";
 import { render as prettyJson } from "prettyjson";
 import { nameByRace } from "fantasy-name-generator";
-import random from "random";
 
 import { CharacterDetails, Race } from "./types";
 import { CLASSES, RACE, SEX } from "./constants";
