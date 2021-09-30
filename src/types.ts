@@ -17,4 +17,14 @@ export type CharacterDetails = {
   sex: Sex;
   race: Race;
   class: Profession;
+  stats: CharacterStats;
+};
+
+export type CharacterStats = {
+  charisma: number;
+  constitution: number;
+  dexterity: number;
+  intelligence: number;
+  strength: number;
+  wisdom: number;
 };

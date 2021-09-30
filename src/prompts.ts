@@ -1,7 +1,9 @@
 import inquirer from "inquirer";
 import { render as prettyJson } from "prettyjson";
 import { nameByRace } from "fantasy-name-generator";
-import { CharacterDetails, Race } from "./types";
+import random from "random";
+
+import { CharacterDetails, CharacterStats, Race } from "./types";
 import { CLASSES, RACE, SEX } from "./constants";
 import { writeToFile } from "./write-to-file";
 
@@ -38,12 +40,24 @@ async function inquirePrompts(): Promise<void> {
         return val ? val : nameByRace(normalizeRace(race), { gender: sex });
       },
     },
+    {
+      type: "confirm", // todo: cf
+      name: "stats",
+      message: "Generate random stats?",
+    },
   ]);
+
+  // todo: clean this up. This is gross.
+  if (answers.stats) {
+    answers.stats = generateRandomStats()
+  }
 
   const formattedAnswers = formatAnswers(answers);
   console.log(prettyJson(formattedAnswers));
   await writeToFile(formattedAnswers);
 }
+
+/** todo: cf - move things to a utils or similar file */
 
 function capitalizeFirstLetter(word: string | null) {
   return word ? word.charAt(0).toUpperCase() + word.slice(1) : "";
@@ -55,6 +69,7 @@ function formatAnswers(data: CharacterDetails) {
     sex: capitalizeFirstLetter(data.sex),
     race: capitalizeFirstLetter(data.race),
     class: capitalizeFirstLetter(data.class),
+    stats: data.stats || null,
   };
 }
 
@@ -76,6 +91,21 @@ function isRandomAnswer(answer: string) {
 function normalizeRace(race: Race) {
   // nameByRace generator does not support half-elf as an input (they aren't _real_ people)
   return race === "half-elf" ? "elf" : race;
+}
+
+function generateRandomStats(): CharacterStats {
+  function roll3d6(): number {
+    return random.int(1, 6) + random.int(1, 6) + random.int(1, 6);
+  }
+
+  return {
+    charisma: roll3d6(),
+    constitution: roll3d6(),
+    dexterity: roll3d6(),
+    intelligence: roll3d6(),
+    strength: roll3d6(),
+    wisdom: roll3d6(),
+  };
 }
 
 export { inquirePrompts };

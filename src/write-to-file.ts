@@ -1,6 +1,6 @@
 import writeYamlFile from "write-yaml-file";
 
-async function writeToFile(data: Record<string, string>): Promise<void> {
+async function writeToFile(data: Record<string, unknown>): Promise<void> {
   const creationDate = new Date().toLocaleDateString();
   const fileName =
     `${data.name}-${data.race}-${data.class}-${creationDate}.json`.replace(
