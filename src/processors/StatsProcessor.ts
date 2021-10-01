@@ -1,14 +1,13 @@
 import random from "random";
 import CharacterDetailsProcessor from "./CharacterDetailsProcessor";
-import { CharacterDetails, CharacterStats } from "../types";
+import { CharacterStats, RawCharacterDetails } from "../types";
 
-class StatsProcessor implements CharacterDetailsProcessor {
-  process(input: CharacterDetails): CharacterDetails {
+class StatsProcessor extends CharacterDetailsProcessor {
+  process(input: RawCharacterDetails): RawCharacterDetails {
     const result = { ...input };
     if (result.stats) {
       result.stats = StatsProcessor.generateRandomStats();
     }
-
     return result;
   }
 

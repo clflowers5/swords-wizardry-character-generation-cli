@@ -1,5 +1,9 @@
 import CharacterDetailsProcessor from "./CharacterDetailsProcessor";
-import { CharacterDetails } from "../types";
+import {
+  CharacterDetails,
+  RawCharacterDetails,
+  valueIsCharacterDetails,
+} from "../types";
 
 class CharacterDetailsProcessChain {
   private processors: CharacterDetailsProcessor[] = [];
@@ -9,10 +13,17 @@ class CharacterDetailsProcessChain {
     return this;
   }
 
-  process(input: CharacterDetails): CharacterDetails {
-    return this.processors.reduce((carry, current) => {
+  process(input: RawCharacterDetails): CharacterDetails {
+    const result = this.processors.reduce((carry, current) => {
       return current.process(carry);
     }, input);
+
+    if (valueIsCharacterDetails(result)) {
+      return result;
+    } else {
+      console.log("result", result);
+      throw new Error("Unexpected result type");
+    }
   }
 }
 
