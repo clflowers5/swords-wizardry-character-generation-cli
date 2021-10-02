@@ -1,5 +1,5 @@
 import { nameByRace } from "fantasy-name-generator";
-import CharacterDetailsProcessor from "./CharacterDetailsProcessor";
+import { CharacterDetailsProcessor } from "./CharacterDetailsProcessor";
 import { CharacterDetails, Race } from "../types";
 
 class NameProcessor extends CharacterDetailsProcessor {
@@ -15,6 +15,9 @@ class NameProcessor extends CharacterDetailsProcessor {
       // Silliness
       if (typeof generatedName === "string") {
         result.name = generatedName;
+      } else {
+        // Will be an Error in this case
+        throw generatedName;
       }
     }
 
@@ -27,4 +30,4 @@ class NameProcessor extends CharacterDetailsProcessor {
   }
 }
 
-export default NameProcessor;
+export { NameProcessor };

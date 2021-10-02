@@ -1,4 +1,4 @@
-import CharacterDetailsProcessor from "./CharacterDetailsProcessor";
+import { CharacterDetailsProcessor } from "./CharacterDetailsProcessor";
 import { RACES, RawCharacterDetails } from "../types";
 
 class RaceProcessor extends CharacterDetailsProcessor {
@@ -12,4 +12,4 @@ class RaceProcessor extends CharacterDetailsProcessor {
   }
 }
 
-export default RaceProcessor;
+export { RaceProcessor };

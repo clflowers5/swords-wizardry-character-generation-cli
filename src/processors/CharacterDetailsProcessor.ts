@@ -21,4 +21,4 @@ abstract class CharacterDetailsProcessor {
   }
 }
 
-export default CharacterDetailsProcessor;
+export { CharacterDetailsProcessor };

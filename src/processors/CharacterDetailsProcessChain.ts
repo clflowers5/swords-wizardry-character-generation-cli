@@ -1,4 +1,4 @@
-import CharacterDetailsProcessor from "./CharacterDetailsProcessor";
+import { CharacterDetailsProcessor } from "./CharacterDetailsProcessor";
 import {
   CharacterDetails,
   RawCharacterDetails,
@@ -21,10 +21,11 @@ class CharacterDetailsProcessChain {
     if (valueIsCharacterDetails(result)) {
       return result;
     } else {
-      console.log("result", result);
-      throw new Error("Unexpected result type");
+      throw new Error(
+        `Unable to validate result type:\n${JSON.stringify(result, null, 2)}`
+      );
     }
   }
 }
 
-export default CharacterDetailsProcessChain;
+export { CharacterDetailsProcessChain };

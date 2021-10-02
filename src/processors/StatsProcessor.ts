@@ -1,5 +1,5 @@
 import random from "random";
-import CharacterDetailsProcessor from "./CharacterDetailsProcessor";
+import { CharacterDetailsProcessor } from "./CharacterDetailsProcessor";
 import { CharacterStats, RawCharacterDetails } from "../types";
 
 class StatsProcessor extends CharacterDetailsProcessor {
@@ -27,4 +27,4 @@ class StatsProcessor extends CharacterDetailsProcessor {
   }
 }
 
-export default StatsProcessor;
+export { StatsProcessor };
